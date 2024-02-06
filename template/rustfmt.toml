@@ -1,0 +1,4 @@
+condense_wildcard_suffixes = true
+fn_single_line = true
+force_multiline_blocks = true
+hard_tabs = true
