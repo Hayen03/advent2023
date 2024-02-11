@@ -1,0 +1,67 @@
+expend_space(&mut galaxies, &doubled_lines.into_iter().collect(), &doubled_column.into_iter().collect());
+
+	let (width, height) = {
+		let mut minx = usize::MAX;
+		let mut miny = usize::MAX;
+		let mut maxx = 0;
+		let mut maxy = 0;
+		for (x, y) in &galaxies {
+			if x < &minx {
+				minx = *x;
+			}
+			if y < &miny {
+				miny = *y;
+			}
+			if x > &maxx {
+				maxx = *x;
+			}
+			if y > &maxy {
+				maxy = *y;
+			}
+		}
+		if (galaxies.len() == 0) {
+			(0, 0)
+		} else {
+			(maxx-minx+1, maxy-miny+1)
+		}
+	};
+
+	println!("{}", "■".repeat(width+2));
+	for y in 0..height {
+		print!("■");
+		for x in 0..width {
+			if galaxies.contains(&(x, y)) {
+				print!("⋆");
+			} else {
+				let color = normal_space_color;
+				let symb = ".";
+				print!("{}", symb.custom_color(color));
+			}
+		}
+		println!("■");
+	}
+	println!("{}", "■".repeat(width+2));
+
+
+	fn expend_space(galaxies: &mut [(usize, usize)], double_lines: &Vec<usize>, double_columns: &Vec<usize>) {
+	let mut deltas: Vec<(usize, usize)> = vec![(0, 0); galaxies.len()];
+	for dl in double_lines {
+		for (i, (_, galy)) in galaxies.iter().enumerate() {
+			if dl < galy {
+				deltas[i].1 += 1;
+			}
+		}
+	}
+	for dc in double_columns {
+		for (i, (galx, _)) in galaxies.iter().enumerate() {
+			if dc < galx {
+				deltas[i].0 += 1;
+			}
+		}
+	}
+	for i in 0..galaxies.len() {
+		let d = deltas[i];
+		let g = &mut galaxies[i];
+		*g = (g.0+d.0, g.1+d.1);
+	}
+}
